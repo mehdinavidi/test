@@ -6,21 +6,21 @@ const PASS = "bilder";
 const DATA = {
   sets: [
     { id: 1, code: "ACH-101", name: "Standard-OP Set", department: "Chirurgie",
-      image_url: "https://via.placeholder.com/320x200?text=ACH-101" },
+      image_url: "images/set-ach-101.jpg" },
     { id: 2, code: "ACH-102", name: "Laparoskopie Set", department: "Chirurgie",
-      image_url: "https://via.placeholder.com/320x200?text=ACH-102" },
+      image_url: "images/set-ach-102.jpg" },
     { id: 3, code: "ACH-103", name: "Orthopädie Standard", department: "Ortho",
       image_url: "https://via.placeholder.com/320x200?text=ACH-103" }
   ],
   instruments: [
     { id: 1, code: "INST-1", name: "Skalpellgriff Nr. 4", category: "Schneiden",
-      image_url: "https://via.placeholder.com/600x400?text=Skalpellgriff+4" },
+      image_url: "images/instrument-1.jpg" },
     { id: 2, code: "INST-2", name: "Schere Metzenbaum 14 cm", category: "Schneiden",
-      image_url: "https://via.placeholder.com/600x400?text=Metzenbaum+14cm" },
+      image_url: "images/instrument-2.jpg" },
     { id: 3, code: "INST-3", name: "Pinzette anatomisch 14 cm", category: "Greifen",
-      image_url: "https://via.placeholder.com/600x400?text=Pinzette+14cm" },
+      image_url: "images/instrument-3.jpg" },
     { id: 4, code: "INST-4", name: "Klemme Kocher gebogen", category: "Klemmen",
-      image_url: "https://via.placeholder.com/600x400?text=Kocher+gebogen" },
+      image_url: "images/instrument-4.jpg" },
     { id: 5, code: "INST-5", name: "Nadelhalter Mayo-Hegar 16 cm", category: "Halten/Nähen",
       image_url: "https://via.placeholder.com/600x400?text=Mayo-Hegar+16cm" },
     { id: 6, code: "INST-6", name: "Tuchklemme", category: "Fixieren",
