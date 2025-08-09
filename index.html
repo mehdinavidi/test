@@ -1,0 +1,76 @@
+
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AEMP Pack-Demo</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>AEMP Pack-Demo</h1>
+    <div class="actions">
+      <input id="search" type="search" placeholder="Sets suchen…" />
+      <div id="userBox" class="userbox hidden">
+        <span id="userName"></span>
+        <button id="logoutBtn" title="Abmelden">Abmelden</button>
+      </div>
+      <button id="resetData" title="Lokale Testdaten zurücksetzen">Testdaten zurücksetzen</button>
+    </div>
+  </header>
+
+  <main>
+    <aside id="setList"></aside>
+    <section id="details">
+      <div class="placeholder">
+        <h2>Wähle links ein Set aus</h2>
+        <p>Dann siehst du hier die Details und kannst den Packvorgang starten.</p>
+      </div>
+    </section>
+  </main>
+
+  <!-- Pack Modal -->
+  <div id="modalBackdrop" class="hidden">
+    <div id="modal">
+      <div class="modal-header">
+        <h3 id="modalTitle">Packvorgang</h3>
+        <button id="modalClose" aria-label="Schließen">×</button>
+      </div>
+      <div class="modal-body" id="modalBody"></div>
+      <div class="modal-footer">
+        <button id="cancelPack">Abbrechen</button>
+        <button id="savePack" class="primary">Speichern & Abschließen</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lightbox Modal -->
+  <div id="lightboxBackdrop" class="hidden" aria-hidden="true">
+    <div id="lightbox">
+      <img id="lightboxImg" alt="Vorschau" />
+      <div id="lightboxCaption"></div>
+      <button id="lightboxClose" aria-label="Bild schließen">×</button>
+    </div>
+  </div>
+
+  <!-- Login Overlay -->
+  <div id="loginOverlay" class="login-overlay hidden">
+    <form id="loginForm" class="login-card" autocomplete="off">
+      <h3>Anmeldung</h3>
+      <p class="muted">Demo-User: <code>ips-1</code> … <code>ips-5</code> • Passwort: <code>bilder</code></p>
+      <label>Benutzername
+        <input id="loginUser" name="user" required placeholder="z. B. ips-1" />
+      </label>
+      <label>Passwort
+        <input id="loginPass" type="password" name="pass" required placeholder="Passwort" />
+      </label>
+      <div class="login-actions">
+        <button type="submit" class="primary">Anmelden</button>
+      </div>
+    </form>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
