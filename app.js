@@ -1,30 +1,82 @@
+alles klar — hier ist eine **fertige `app.js`**, in der ich alles auf **Thumbnail + Großbild** umgestellt habe (mit Fallback auf `image_url`).
+Lege dafür im Repo bitte folgende Ordner an und benenne die Dateien so, wie unten im `DATA` eingetragen ist:
 
-/* AEMP Pack-Demo – Login + Bilder + Lightbox + History */
+```
+images/sets/ach-101-thumb.jpg
+images/sets/ach-101-full.jpg
+images/sets/ach-102-thumb.jpg
+images/sets/ach-102-full.jpg
+images/sets/ach-103-thumb.jpg
+images/sets/ach-103-full.jpg
+
+images/instruments/inst-1-thumb.jpg
+images/instruments/inst-1-full.jpg
+...
+images/instruments/inst-6-thumb.jpg
+images/instruments/inst-6-full.jpg
+```
+
+Wenn du erstmal nur ein Bild pro Element hast, kannst du einfach **nur** `image_url` setzen – der Code fällt automatisch darauf zurück.
+
+```js
+/* AEMP Pack-Demo – GitHub Pages Version
+   - Login: ips-1..ips-5 / bilder
+   - Bilder: thumb_url (klein) + full_url (groß, für Lightbox) – mit Fallback auf image_url
+   - Report im Modal (kein Popup)
+*/
+
 const USERS = new Set(["ips-1","ips-2","ips-3","ips-4","ips-5"]);
 const PASS = "bilder";
 
 const DATA = {
   sets: [
     { id: 1, code: "ACH-101", name: "Standard-OP Set", department: "Chirurgie",
-      image_url: "images/set-ach-101.jpg" },
+      thumb_url: "images/sets/ach-101-thumb.jpg",
+      full_url:  "images/sets/ach-101-full.jpg",
+      image_url: "images/sets/ach-101-full.jpg" // optionaler Fallback
+    },
     { id: 2, code: "ACH-102", name: "Laparoskopie Set", department: "Chirurgie",
-      image_url: "images/set-ach-102.jpg" },
+      thumb_url: "images/sets/ach-102-thumb.jpg",
+      full_url:  "images/sets/ach-102-full.jpg",
+      image_url: "images/sets/ach-102-full.jpg"
+    },
     { id: 3, code: "ACH-103", name: "Orthopädie Standard", department: "Ortho",
-      image_url: "https://via.placeholder.com/320x200?text=ACH-103" }
+      thumb_url: "images/sets/ach-103-thumb.jpg",
+      full_url:  "images/sets/ach-103-full.jpg",
+      image_url: "images/sets/ach-103-full.jpg"
+    }
   ],
   instruments: [
     { id: 1, code: "INST-1", name: "Skalpellgriff Nr. 4", category: "Schneiden",
-      image_url: "images/instrument-1.jpg" },
+      thumb_url: "images/instruments/inst-1-thumb.jpg",
+      full_url:  "images/instruments/inst-1-full.jpg",
+      image_url: "images/instruments/inst-1-full.jpg"
+    },
     { id: 2, code: "INST-2", name: "Schere Metzenbaum 14 cm", category: "Schneiden",
-      image_url: "images/instrument-2.jpg" },
+      thumb_url: "images/instruments/inst-2-thumb.jpg",
+      full_url:  "images/instruments/inst-2-full.jpg",
+      image_url: "images/instruments/inst-2-full.jpg"
+    },
     { id: 3, code: "INST-3", name: "Pinzette anatomisch 14 cm", category: "Greifen",
-      image_url: "images/instrument-3.jpg" },
+      thumb_url: "images/instruments/inst-3-thumb.jpg",
+      full_url:  "images/instruments/inst-3-full.jpg",
+      image_url: "images/instruments/inst-3-full.jpg"
+    },
     { id: 4, code: "INST-4", name: "Klemme Kocher gebogen", category: "Klemmen",
-      image_url: "images/instrument-4.jpg" },
+      thumb_url: "images/instruments/inst-4-thumb.jpg",
+      full_url:  "images/instruments/inst-4-full.jpg",
+      image_url: "images/instruments/inst-4-full.jpg"
+    },
     { id: 5, code: "INST-5", name: "Nadelhalter Mayo-Hegar 16 cm", category: "Halten/Nähen",
-      image_url: "https://via.placeholder.com/600x400?text=Mayo-Hegar+16cm" },
+      thumb_url: "images/instruments/inst-5-thumb.jpg",
+      full_url:  "images/instruments/inst-5-full.jpg",
+      image_url: "images/instruments/inst-5-full.jpg"
+    },
     { id: 6, code: "INST-6", name: "Tuchklemme", category: "Fixieren",
-      image_url: "https://via.placeholder.com/600x400?text=Tuchklemme" }
+      thumb_url: "images/instruments/inst-6-thumb.jpg",
+      full_url:  "images/instruments/inst-6-full.jpg",
+      image_url: "images/instruments/inst-6-full.jpg"
+    }
   ],
   setInstruments: [
     { set_id: 1, instrument_id: 1, qty_required: 2 },
@@ -46,21 +98,21 @@ const DATA = {
 const MISSING_REASONS = ["Reparatur", "Verlust", "in Steri", "Sonstiges"];
 
 // ----- Storage helpers -----
-const KEY_SESSIONS = "aemp_demo_sessions_v2";
-const KEY_USER = "aemp_demo_user";
+const KEY_SESSIONS = "aemp_demo_sessions_v3";
+const KEY_USER = "aemp_demo_user_v1";
 
 function loadSessions() {
   try { return JSON.parse(localStorage.getItem(KEY_SESSIONS) || "{}"); }
   catch { return {}; }
 }
-function saveSessions(s) { try { localStorage.setItem(KEY_SESSIONS, JSON.stringify(s)); } catch(e) {} }
-function resetSessions() { try { localStorage.removeItem(KEY_SESSIONS); } catch(e) {} }
+function saveSessions(s) { try { localStorage.setItem(KEY_SESSIONS, JSON.stringify(s)); } catch(e) { console.warn(e); } }
+function resetSessions() { try { localStorage.removeItem(KEY_SESSIONS); } catch(e) { console.warn(e); } }
 
 function getUser() {
   try { return JSON.parse(localStorage.getItem(KEY_USER) || "null"); } catch { return null; }
 }
-function setUser(u) { try { localStorage.setItem(KEY_USER, JSON.stringify(u)); } catch(e) {} }
-function logoutUser() { try { localStorage.removeItem(KEY_USER); } catch(e) {} }
+function setUser(u) { try { localStorage.setItem(KEY_USER, JSON.stringify(u)); } catch(e) { console.warn(e); } }
+function logoutUser() { try { localStorage.removeItem(KEY_USER); } catch(e) { console.warn(e); } }
 
 // ----- DOM refs -----
 const setListEl = document.getElementById("setList");
@@ -71,7 +123,7 @@ const userBox = document.getElementById("userBox");
 const userNameEl = document.getElementById("userName");
 const logoutBtn = document.getElementById("logoutBtn");
 
-// Modal
+// Pack Modal
 const modalBackdrop = document.getElementById("modalBackdrop");
 const modalBody = document.getElementById("modalBody");
 const modalTitle = document.getElementById("modalTitle");
@@ -85,6 +137,13 @@ const lbImg = document.getElementById("lightboxImg");
 const lbCaption = document.getElementById("lightboxCaption");
 const lbClose = document.getElementById("lightboxClose");
 
+// Report
+const reportBackdrop = document.getElementById("reportBackdrop");
+const reportBody = document.getElementById("reportBody");
+const reportTitle = document.getElementById("reportTitle");
+const reportClose = document.getElementById("reportClose");
+const reportPrint = document.getElementById("reportPrint");
+
 // Login
 const loginOverlay = document.getElementById("loginOverlay");
 const loginForm = document.getElementById("loginForm");
@@ -92,6 +151,10 @@ const loginUser = document.getElementById("loginUser");
 const loginPass = document.getElementById("loginPass");
 
 let selectedSetId = null;
+
+// ----- Utils -----
+function thumb(obj) { return obj.thumb_url || obj.image_url; }
+function full(obj)  { return obj.full_url  || obj.image_url; }
 
 // ----- Auth -----
 function requireLogin() {
@@ -130,7 +193,7 @@ logoutBtn.addEventListener("click", () => {
   requireLogin();
 });
 
-// ----- Lightbox helpers -----
+// ----- Lightbox -----
 function openLightbox(src, caption = "") {
   lbImg.src = src;
   lbCaption.textContent = caption;
@@ -146,7 +209,7 @@ lbBackdrop.addEventListener("click", (e) => {
 });
 lbClose.addEventListener("click", closeLightbox);
 
-// ----- Sets & Instruments helpers -----
+// ----- Helpers -----
 function getSetById(id) { return DATA.sets.find(s => s.id === id); }
 function getSetLines(setId) {
   return DATA.setInstruments
@@ -168,30 +231,41 @@ function computeSetStatus(setId) {
   return { label: "in Arbeit", cls: "warn" };
 }
 
-// ----- Render set list -----
+// ----- Render: Set-Liste -----
 function renderSetList(filter = "") {
   const q = filter.trim().toLowerCase();
   setListEl.innerHTML = "";
-  DATA.sets
-    .filter(s => s.code.toLowerCase().includes(q) || s.name.toLowerCase().includes(q))
-    .forEach(s => {
-      const item = document.createElement("div");
-      item.className = "item" + (s.id === selectedSetId ? " active" : "");
-      const status = computeSetStatus(s.id);
-      item.innerHTML = `
-        <img class="thumb" src="${s.image_url}" alt="${s.code} Bild" />
-        <div>
-          <div class="title">${s.code} – ${s.name}</div>
-          <span class="meta">${s.department}</span>
-        </div>
-        <div><span class="badge ${status.cls}">${status.label}</span></div>
-      `;
-      item.addEventListener("click", () => { selectedSetId = s.id; renderSetList(q); renderDetails(); });
-      setListEl.appendChild(item);
+  const results = DATA.sets.filter(s => s.code.toLowerCase().includes(q) || s.name.toLowerCase().includes(q));
+  if (!results.length) {
+    const div = document.createElement("div");
+    div.style.padding = "12px"; div.innerHTML = '<span class="meta">Keine Sets gefunden.</span>';
+    setListEl.appendChild(div);
+    return;
+  }
+  results.forEach(s => {
+    const item = document.createElement("div");
+    item.className = "item" + (s.id === selectedSetId ? " active" : "");
+    const status = computeSetStatus(s.id);
+    item.innerHTML = `
+      <img class="thumb" src="${thumb(s)}" alt="${s.code} Bild"
+           data-zoom-src="${full(s)}" data-caption="${s.code} – ${s.name}" />
+      <div>
+        <div class="title">${s.code} – ${s.name}</div>
+        <span class="meta">${s.department}</span>
+      </div>
+      <div><span class="badge ${status.cls}">${status.label}</span></div>
+    `;
+    item.addEventListener("click", () => { selectedSetId = s.id; renderSetList(q); renderDetails(); });
+    // optional: Bildklick zum Zoomen in der Liste
+    item.querySelector("img").addEventListener("click", (ev) => {
+      ev.stopPropagation();
+      openLightbox(full(s), `${s.code} – ${s.name}`);
     });
+    setListEl.appendChild(item);
+  });
 }
 
-// ----- Render details -----
+// ----- Render: Details -----
 function renderDetails() {
   if (!selectedSetId) {
     detailsEl.innerHTML = '<div class="placeholder"><h2>Wähle links ein Set aus</h2><p>Dann siehst du hier die Details und kannst den Packvorgang starten.</p></div>';
@@ -205,15 +279,15 @@ function renderDetails() {
 
   const tableRows = lines.map(l => `
     <tr>
-      <td><img class="ithumb" src="${l.instrument.image_url}" alt="${l.instrument.name}"
+      <td><img class="ithumb" src="${thumb(l.instrument)}" alt="${l.instrument.name}"
                title="Zum Vergrößern anklicken"
-               data-zoom-src="${l.instrument.image_url}" data-caption="${l.instrument.name}" /></td>
+               data-zoom-src="${full(l.instrument)}" data-caption="${l.instrument.name}" /></td>
       <td>${l.instrument.name}</td>
       <td class="qty">${l.qty_required}</td>
       <td>${l.instrument.code}</td>
       <td>${l.instrument.category}</td>
     </tr>
-  `).join("");
+  ).trim()).join("");
 
   detailsEl.innerHTML = `
     <h2>${s.code} – ${s.name}</h2>
@@ -230,7 +304,9 @@ function renderDetails() {
       </dl>
     </div>
 
-    <img class="thumb" src="${s.image_url}" alt="${s.code}" style="width:160px;height:100px;cursor:zoom-in;border-radius:8px;border:1px solid var(--chip-border)" data-zoom-src="${s.image_url}" data-caption="${s.code} – ${s.name}"/>
+    <img class="thumb" src="${thumb(s)}" alt="${s.code}"
+         style="width:160px;height:100px;cursor:zoom-in;border-radius:8px;border:1px solid var(--chip-border)"
+         data-zoom-src="${full(s)}" data-caption="${s.code} – ${s.name}"/>
 
     <table class="table">
       <thead><tr><th></th><th>Instrument</th><th class="qty">Soll</th><th>Code</th><th>Kategorie</th></tr></thead>
@@ -258,7 +334,7 @@ function renderDetails() {
   if (rb) rb.onclick = () => openReport(selectedSetId);
 }
 
-// ----- Pack Modal logic -----
+// ----- Pack Modal -----
 function openPackModal(setObj, lines) {
   const u = getUser();
   if (!u) { requireLogin(); return; }
@@ -269,9 +345,9 @@ function openPackModal(setObj, lines) {
   const rows = lines.map((l, idx) => `
     <tr data-idx="${idx}">
       <td>
-        <img class="ithumb" src="${l.instrument.image_url}" alt="${l.instrument.name}"
+        <img class="ithumb" src="${thumb(l.instrument)}" alt="${l.instrument.name}"
              title="Zum Vergrößern anklicken"
-             data-zoom-src="${l.instrument.image_url}" data-caption="${l.instrument.name}" />
+             data-zoom-src="${full(l.instrument)}" data-caption="${l.instrument.name}" />
       </td>
       <td>${l.instrument.name}<br><span class="subtle">${l.instrument.code}</span></td>
       <td class="qty">${l.qty_required}</td>
@@ -291,7 +367,7 @@ function openPackModal(setObj, lines) {
       </td>
       <td><textarea class="note" rows="1" placeholder="Notiz (optional)"></textarea></td>
     </tr>
-  `).join("");
+  ).trim()).join("");
 
   modalBody.innerHTML = `
     <table class="table">
@@ -305,7 +381,7 @@ function openPackModal(setObj, lines) {
     </table>
   `;
 
-  // Wire qty +/-, missing sync, and image zooms
+  // wire qty +/-, missing sync, and image zoom
   modalBody.querySelectorAll("tr").forEach(tr => {
     const idx = parseInt(tr.dataset.idx,10);
     const req = lines[idx].qty_required;
@@ -340,7 +416,6 @@ function openPackModal(setObj, lines) {
 }
 
 function closeModal() { modalBackdrop.classList.add("hidden"); }
-
 modalClose.onclick = closeModal;
 cancelPack.onclick = closeModal;
 
@@ -381,48 +456,37 @@ savePack.onclick = () => {
   alert("Packvorgang gespeichert.");
 };
 
-// Report view (new window)
+// ----- Report Modal -----
 function openReport(setId) {
   const s = getSetById(setId);
   const sess = loadSessions()[setId];
-  if (!sess) return;
-  const html = `
-    <html><head><meta charset="utf-8"><title>Packreport ${s.code}</title>
-    <style>
-      body{font:14px system-ui;padding:20px;color:#111}
-      h1{font-size:18px;margin:0 0 8px}
-      table{border-collapse:collapse;width:100%;margin-top:10px}
-      th,td{border:1px solid #ccc;padding:6px;text-align:left}
-      .muted{color:#555}
-      img.thumb{width:160px;height:100px;object-fit:cover;border-radius:8px;border:1px solid #ddd}
-    </style></head><body>
-      <h1>Packreport – ${s.code} – ${s.name}</h1>
-      <div class="muted">Abgeschlossen: ${new Date(sess.closed_at).toLocaleString()}</div>
-      <div class="muted">Benutzer: ${sess.closed_by || sess.started_by || "-"}</div>
-      <img class="thumb" src="${s.image_url}" alt="${s.code}"/>
-
-      <table>
-        <thead><tr><th>Instrument</th><th>Soll</th><th>Ist</th><th>Fehlteil</th><th>Grund</th><th>Notiz</th></tr></thead>
-        <tbody>
-          ${sess.lines.map(l => `<tr>
-            <td>${l.instrument_name}</td>
-            <td>${l.qty_required}</td>
-            <td>${l.qty_found}</td>
-            <td>${l.missing ? "Ja" : "Nein"}</td>
-            <td>${l.reason || ""}</td>
-            <td>${l.note || ""}</td>
-          </tr>`).join("")}
-        </tbody>
-      </table>
-      <script>window.print()</script>
-    </body></html>
+  if (!sess) { alert("Kein Packvorgang vorhanden."); return; }
+  reportTitle.textContent = `Packreport – ${s.code} – ${s.name}`;
+  const rows = sess.lines.map(l => `
+    <tr>
+      <td>${l.instrument_name}</td>
+      <td>${l.qty_required}</td>
+      <td>${l.qty_found}</td>
+      <td>${(l.qty_found<l.qty_required||l.missing) ? "Ja" : "Nein"}</td>
+      <td>${l.reason || ""}</td>
+      <td>${l.note || ""}</td>
+    </tr>
+  ).trim()).join("");
+  reportBody.innerHTML = `
+    <div class="muted">Abgeschlossen: ${new Date(sess.closed_at).toLocaleString()}</div>
+    <div class="muted">Benutzer: ${sess.closed_by || sess.started_by || "-"}</div>
+    <table>
+      <thead><tr><th>Instrument</th><th>Soll</th><th>Ist</th><th>Fehlteil</th><th>Grund</th><th>Notiz</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
   `;
-  const w = window.open("", "_blank");
-  w.document.write(html);
-  w.document.close();
+  reportBackdrop.classList.add("show");
 }
+reportClose.addEventListener("click", () => reportBackdrop.classList.remove("show"));
+reportBackdrop.addEventListener("click", (e) => { if (e.target === reportBackdrop) reportBackdrop.classList.remove("show"); });
+reportPrint.addEventListener("click", () => window.print());
 
-// Search & reset
+// ----- Suche / Reset -----
 searchEl.addEventListener("input", () => renderSetList(searchEl.value));
 resetBtn.addEventListener("click", () => {
   if (confirm("Lokale Testdaten (Packvorgänge) und Login-Status zurücksetzen?")) {
@@ -433,5 +497,8 @@ resetBtn.addEventListener("click", () => {
   }
 });
 
-// Init
+// ----- Init -----
 requireLogin();
+```
+
+Wenn du mir **andere Dateinamen** für deine Bilder gibst, passe ich dir die `DATA`-Sektion sofort darauf an.
